@@ -6,10 +6,15 @@
 
 ### GitHub Configuration
 - Repository: `https://github.com/thethtoozin16888/myshop-inventory`
-- Push status: Initial workspace push completed on 2026-03-07 using a force push to the `main` branch.
+- Push status: Initial workspace push completed on 2026-03-07. Added `index.html` and `detail.html` (Inventory Web App) on the same day.
 - Identity: Configured locally as Raizel (raizel@example.com).
 
-### Airtable & Softr.io Knowledge
+### Inventory System
+- Files: `index.html` (Main Inventory App), `detail.html` (Product Detail Page)
+- Hosted on: GitHub Pages (at `https://thethtoozin16888.github.io/myshop-inventory/`)
+- Backend: Google Apps Script (URL: `https://script.google.com/macros/s/AKfycbz5VRvpDCyFTSGvTCy3EVb1MO9DvnFJyaSVGA14aLp_GC_pnGZH5VBuxzBe16tiY30y/exec`)
+- Hosting: GitHub Pages (Desktop/index.html)
+
 
 **Airtable:**
 - အသုံးပြုရလွယ်ကူပြီး Database နဲ့ Spreadsheet ကို ပေါင်းစပ်ထားသလိုဖြစ်သည်။
