@@ -4,6 +4,11 @@
 
 - Primary ID: 1688307673 (Raizel uses 2 Telegram accounts)
 
+### GitHub Configuration
+- Repository: `https://github.com/thethtoozin16888/myshop-inventory`
+- Push status: Initial workspace push completed on 2026-03-07 using a force push to the `main` branch.
+- Identity: Configured locally as Raizel (raizel@example.com).
+
 ### Airtable & Softr.io Knowledge
 
 **Airtable:**
