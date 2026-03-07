@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details - ငါ့ဆိုင်</title>
+<style>
+:root{
+  --bg:#0f0f1a;--surface:#1a1a2e;--surface2:#25253d;--surface3:#2d2d4a;
+  --accent:#a855f7;--accent2:#ec4899;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;--blue:#3b82f6;
+  --radius:16px;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);margin:0;min-height:100vh;display:flex;flex-direction:column}
+.header{padding:20px;border-bottom:1px solid var(--surface3);display:flex;align-items:center;gap:15px;background:var(--surface);position:sticky;top:0;z-index:10}
+.back-btn{background:var(--surface3);color:var(--text);border:none;padding:10px 15px;border-radius:12px;cursor:pointer;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:8px}
+
+/* Lightbox Styles */
+.lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:400;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.lightbox-overlay.active{display:flex}
+.lightbox-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:0 0 30px rgba(0,0,0,0.5)}
+
+.container{max-width:800px;margin:20px auto;padding:20px;width:100%;box-sizing:border-box}
+.product-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--surface3);box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.product-img{width:100%;max-height:400px;object-fit:contain;background:#000;display:block;cursor:zoom-in}
+
+/* Gallery Styles */
+.gallery-thumbs{display:flex;gap:10px;padding:15px;overflow-x:auto;background:var(--surface2)}
+.thumb{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;opacity:0.6;transition:all 0.2s;flex-shrink:0}
+.thumb:hover{opacity:1}
+.thumb.active{border-color:var(--accent);opacity:1}
+
+.no-img{width:100%;height:300px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:4rem}
+.details{padding:30px}
+.cat-tag{display:inline-block;padding:5px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;background:rgba(168,85,247,0.2);color:var(--accent);margin-bottom:15px;text-transform:uppercase}
+h1{margin:0 0 10px 0;font-size:1.8rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.price{font-size:1.5rem;font-weight:700;color:var(--green);margin-bottom:20px}
+.status-badge{display:inline-block;padding:6px 15px;border-radius:20px;font-size:0.9rem;font-weight:700;margin-bottom:25px}
+.instock{background:rgba(34,197,94,0.15);color:var(--green)}
+.preorder{background:rgba(59,130,246,0.15);color:var(--blue)}
+.soldout{background:rgba(239,68,68,0.15);color:var(--red)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px;border-top:1px solid var(--surface3);padding-top:20px}
+.info-item label{display:block;font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:5px;letter-spacing:1px}
+.info-item span{font-size:1rem;font-weight:500;color:var(--text)}
+.notes-box{background:var(--surface2);padding:20px;border-radius:12px;border-left:4px solid var(--accent)}
+.notes-box label{display:block;font-size:0.75rem;color:var(--text3);margin-bottom:10px;text-transform:uppercase}
+.buy-btn{display:block;width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-align:center;padding:18px;border-radius:12px;text-decoration:none;font-weight:700;margin-top:30px;box-shadow:0 4px 15px rgba(168,85,247,0.4);transition:transform 0.2s}
+.buy-btn:hover{transform:translateY(-2px)}
+
+/* Lightbox */
+.lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:100;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.lightbox-overlay.active{display:flex}
+.lightbox-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,0.5)}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="back-btn">← Back</a>
+  <div style="font-weight:700;font-size:1.2rem">ငါ့ဆိုင် (NgrSine)</div>
+</header>
+
+<div class="container" id="productDetail">
+  <!-- Content will be injected by JS -->
+</div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+  <img id="lightboxImg" class="lightbox-img" src="" alt="Enlarged product view">
+</div>
+
+<script>
+const STORAGE_KEY = 'myshop_inventory';
+
+function openLightbox(url) {
+  const overlay = document.getElementById('lightboxOverlay');
+  const img = document.getElementById('lightboxImg');
+  img.src = url;
+  overlay.classList.add('active');
+}
+
+function closeLightbox() {
+  const overlay = document.getElementById('lightboxOverlay');
+  overlay.classList.remove('active');
+}
+
+function changeImage(url, el) {
+  document.getElementById('mainImg').src = url;
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // Update lightbox click handler
+  document.getElementById('mainImg').onclick = () => openLightbox(url);
+}
+
+function loadProduct() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = parseInt(urlParams.get('id'));
+  
+  if (!id) {
+    document.getElementById('productDetail').innerHTML = '<h2>ပစ္စည်း မတွေ့ပါ (Product not found)</h2>';
+    return;
+  }
+
+  const inventory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const item = inventory.find(i => i.id === id);
+
+  if (!item) {
+    document.getElementById('productDetail').innerHTML = '<h2>ပစ္စည်း မတွေ့ပါ (Product not found)</h2>';
+    return;
+  }
+
+  const statusClass = item.type.replace(/\s+/g, '').toLowerCase();
+  const displayPrice = item.price ? item.price.toLocaleString() + ' MMK' : 'Price TBC';
+  
+  const images = (item.image || '').split(',').filter(u => u.trim() && u !== '__LOCAL_IMAGE__');
+  const mainImg = images.length > 0 ? images[0] : '';
+
+  const html = `
+    <div class="product-card">
+      ${mainImg ? `<img src="${mainImg}" class="product-img" id="mainImg" alt="${item.name}" onclick="openLightbox('${mainImg}')">` : `<div class="no-img">🛍️</div>`}
+      
+      ${images.length > 1 ? `
+        <div class="gallery-thumbs">
+          ${images.map((img, idx) => `
+            <img src="${img}" class="thumb ${idx === 0 ? 'active' : ''}" onclick="changeImage('${img}', this)">
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <div class="details">
+        <span class="cat-tag">${item.category || 'General'}</span>
+        <h1>${item.name}</h1>
+        <div class="price">${displayPrice}</div>
+        <div class="status-badge ${statusClass}">${item.type}</div>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Color / Size</label>
+            <span>${item.color || '—'}</span>
+          </div>
+          <div class="info-item">
+            <label>Available Qty</label>
+            <span>${item.qty || 0} pcs</span>
+          </div>
+        </div>
+
+        ${item.notes ? `
+          <div class="notes-box">
+            <label>Notes / မှတ်ချက်</label>
+            <div style="white-space: pre-wrap;">${item.notes}</div>
+          </div>
+        ` : ''}
+
+        <a href="https://m.me/yourpage" class="buy-btn">Messenger မှာ ဝယ်မယ်</a>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('productDetail').innerHTML = html;
+  document.title = item.name + ' - ငါ့ဆိုင်';
+}
+
+loadProduct();
+</script>
+
+</body>
+</html>
