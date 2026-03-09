@@ -5,13 +5,9 @@
 - Primary ID: 1688307673 (Raizel uses 2 Telegram accounts)
 
 ### GitHub Configuration
-- Repository: `https://github.com/thethtoozin16888/myshop-inventory`
-- Push status: Initial workspace push completed on 2026-03-07. Added `index.html` and `detail.html` (Inventory Web App) on the same day.
-- Identity: Configured locally as Raizel (raizel@example.com).
-
-### Inventory System
-- Files: `index.html` (Main Inventory App), `detail.html` (Product Detail Page)
-- Hosted on: GitHub Pages (at `https://thethtoozin16888.github.io/myshop-inventory/`)
+- Repository: `https://github.com/thethtoozin16888/thethtoozin16888.github.io`
+- Push status: Updated to new repo on 2026-03-09.
+- Hosted on: GitHub Pages (at `https://thethtoozin16888.github.io/`)
 - Backend: Google Apps Script (URL: `https://script.google.com/macros/s/AKfycbz5VRvpDCyFTSGvTCy3EVb1MO9DvnFJyaSVGA14aLp_GC_pnGZH5VBuxzBe16tiY30y/exec`)
 - Hosting: GitHub Pages (Desktop/index.html)
 
