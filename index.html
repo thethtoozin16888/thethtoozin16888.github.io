@@ -551,27 +551,27 @@ const SYNC_STATE_KEY = 'myshop_sync_state';
 const IMAGE_CACHE_KEY = 'myshop_image_cache';
 
 const DEFAULT_DATA = [
-  {id:1,name:"Revlon Lipstick - Nude Velvet 125",category:"Beauty",color:"Nude",price:0,type:"Sold Out",qty:0,image:"",notes:""},
-  {id:2,name:"Revlon Lipstick - Pink It Up 415",category:"Beauty",color:"Pink",price:0,type:"Sold Out",qty:0,image:"",notes:""},
-  {id:3,name:"Revlon Lipstick - Mauve It Over",category:"Beauty",color:"Mauve",price:0,type:"Sold Out",qty:0,image:"",notes:""},
-  {id:4,name:"Revlon Lipstick - Seductive Sienna 015",category:"Beauty",color:"Sienna",price:0,type:"Sold Out",qty:0,image:"",notes:""},
-  {id:5,name:"Revlon Lipstick - Sandalwood 240",category:"Beauty",color:"Brown/Sandalwood",price:0,type:"Sold Out",qty:0,image:"",notes:""},
-  {id:6,name:"Mistine Lipstick - D05",category:"Beauty",color:"Nude/Brown",price:32000,type:"Instock",qty:0,image:"",notes:""},
-  {id:7,name:"Romand Juicy Roll Cheek - 03 White Peach",category:"Beauty",color:"Pink/Peach",price:27500,type:"Instock",qty:0,image:"",notes:""},
-  {id:8,name:"Romand Juicy Roll Cheek - 04 Apricot Beige",category:"Beauty",color:"Apricot/Beige",price:27500,type:"Instock",qty:0,image:"",notes:""},
-  {id:9,name:"PBT+PC OEM Keycaps (Gun Style / CS Theme)",category:"Tech",color:"Black & White",price:50000,type:"Preorder",qty:0,image:"",notes:""},
-  {id:10,name:"PBT Keycaps (Super Mario / Nintendo Theme)",category:"Tech",color:"Colorful",price:58000,type:"Preorder",qty:0,image:"",notes:""},
-  {id:11,name:"Wireless Gaming Mouse (2.4G + BT)",category:"Tech",color:"Black",price:25000,type:"Preorder",qty:0,image:"",notes:""},
-  {id:12,name:"AULA SC101 Gaming Mouse",category:"Tech",color:"White & Grey",price:75000,type:"Preorder",qty:0,image:"https://i.ibb.co/4nZWg9G3/aula-sc101-1.jpg,https://i.ibb.co/wFQp6yGc/aula-sc101-2.jpg",notes:""},
-  {id:13,name:"Transparent/Frosted Keycaps 117-Key",category:"Tech",color:"Clear/White",price:48000,type:"Preorder",qty:0,image:"",notes:""},
-  {id:14,name:"PBT Topographic Keycaps 87+10 Key",category:"Tech",color:"Black with RGB Lines",price:35000,type:"Preorder",qty:0,image:"",notes:""},
+  {id:1,name:"Revlon Lipstick - Nude Velvet 125",category:"Lipstick",color:"Nude",price:0,type:"Sold Out",qty:0,image:"",notes:""},
+  {id:2,name:"Revlon Lipstick - Pink It Up 415",category:"Lipstick",color:"Pink",price:0,type:"Sold Out",qty:0,image:"",notes:""},
+  {id:3,name:"Revlon Lipstick - Mauve It Over",category:"Lipstick",color:"Mauve",price:0,type:"Sold Out",qty:0,image:"",notes:""},
+  {id:4,name:"Revlon Lipstick - Seductive Sienna 015",category:"Lipstick",color:"Sienna",price:0,type:"Sold Out",qty:0,image:"",notes:""},
+  {id:5,name:"Revlon Lipstick - Sandalwood 240",category:"Lipstick",color:"Brown/Sandalwood",price:0,type:"Sold Out",qty:0,image:"",notes:""},
+  {id:6,name:"Mistine Lipstick - D05",category:"Lipstick",color:"Nude/Brown",price:32000,type:"Instock",qty:0,image:"",notes:""},
+  {id:7,name:"Romand Juicy Roll Cheek - 03 White Peach",category:"Cosmetic",color:"Pink/Peach",price:27500,type:"Instock",qty:0,image:"",notes:""},
+  {id:8,name:"Romand Juicy Roll Cheek - 04 Apricot Beige",category:"Cosmetic",color:"Apricot/Beige",price:27500,type:"Instock",qty:0,image:"",notes:""},
+  {id:9,name:"PBT+PC OEM Keycaps (Gun Style / CS Theme)",category:"Keycaps",color:"Black & White",price:50000,type:"Preorder",qty:0,image:"",notes:""},
+  {id:10,name:"PBT Keycaps (Super Mario / Nintendo Theme)",category:"Keycaps",color:"Colorful",price:58000,type:"Preorder",qty:0,image:"",notes:""},
+  {id:11,name:"Wireless Gaming Mouse (2.4G + BT)",category:"Mouses",color:"Black",price:25000,type:"Preorder",qty:0,image:"",notes:""},
+  {id:12,name:"AULA SC101 Gaming Mouse",category:"Mouses",color:"White & Grey",price:75000,type:"Preorder",qty:0,image:"https://i.ibb.co/4nZWg9G3/aula-sc101-1.jpg,https://i.ibb.co/wFQp6yGc/aula-sc101-2.jpg",notes:""},
+  {id:13,name:"Transparent/Frosted Keycaps 117-Key",category:"Keycaps",color:"Clear/White",price:48000,type:"Preorder",qty:0,image:"",notes:""},
+  {id:14,name:"PBT Topographic Keycaps 87+10 Key",category:"Keycaps",color:"Black with RGB Lines",price:35000,type:"Preorder",qty:0,image:"",notes:""},
   {id:18,name:"Ajuste UV Spray - Non-Fragrance (White)",category:"Sun Spray",color:"350ml / White",price:55000,type:"Preorder",qty:0,image:"",notes:"Japan Brand - Large Size"},
   {id:19,name:"Simple Kind to Skin Soothing Facial Toner",category:"Skincare",color:"200ml",price:0,type:"Preorder",qty:0,image:"",notes:""},
   {id:20,name:"The Ordinary Niacinamide 10% + Zinc 1%",category:"Skincare",color:"30ml",price:0,type:"Preorder",qty:0,image:"",notes:""},
   {id:21,name:"Pond's Magic BB Powder",category:"Cosmetic",color:"50g",price:0,type:"Preorder",qty:0,image:"",notes:""},
   {id:22,name:"Maybelline HyperSharp Extreme Liner",category:"Cosmetic",color:"Black",price:0,type:"Preorder",qty:0,image:"",notes:""},
-  {id:23,name:"Jeep Spirit Sun-Protection Hoodie",category:"Summer 🌤️",color:"Sky Blue, Pink, Light Purple, White, Grey",price:33000,type:"Preorder",qty:0,image:"",notes:"UPF 50+, Ice Silk Material"},
-  {id:24,name:"NOHON RGB Sound Bar",category:"Tech",color:"Black, White",price:22000,type:"Preorder",qty:0,image:"",notes:"Sound Control, Magnetic, RGB"},
+  {id:23,name:"Jeep Spirit Sun-Protection Hoodie",category:"Summer Hoodie 🌤️",color:"Sky Blue, Pink, Light Purple, White, Grey",price:33000,type:"Preorder",qty:0,image:"",notes:"UPF 50+, Ice Silk Material"},
+  {id:24,name:"NOHON RGB Sound Bar",category:"RGB Sound Bar",color:"Black, White",price:22000,type:"Preorder",qty:0,image:"",notes:"Sound Control, Magnetic, RGB"},
   {id:25,name:"Aula F108 Pro Keyboard",category:"Keyboard",color:"—",price:430000,type:"Preorder",qty:0,image:"",notes:"Premium Mechanical Keyboard"},
   {id:26,name:"Aula L99 Mechanical Keyboard",category:"Keyboard",color:"White Purple",price:575000,type:"Instock",qty:1,image:"",notes:"IPS Touchscreen, Gasket Structure, 8000mAh"},
   {id:27,name:"Gateron Oil King Switch (Preorder)",category:"key switch",color:"All Black (Opaque)",price:130000,type:"Preorder",qty:0,image:"https://i.ibb.co/68vD8Snt/oil-king.jpg",notes:"1 bottle - 30pcs"},
@@ -1373,45 +1373,7 @@ function toast(msg, type = 'info') {
 }
 
 function checkAndAddDiscussedItems() {
-  return; // Disabled auto-adding to prevent category conflicts with Sheet data
-  const itemsToAdd = [
-    { name: "Ajuste UV Spray - Non-Fragrance (White)", category: "Sun Spray", price: 55000, type: "Preorder", qty: 0, color: "350ml / White", notes: "Japan Brand - Large Size" },
-    { name: "Jeep Spirit Sun-Protection Hoodie", category: "Summer 🌤️", price: 33000, type: "Preorder", qty: 0, color: "Sky Blue, Pink, Light Purple, White, Grey", notes: "UPF 50+, Ice Silk Material" },
-    { name: "NOHON RGB Sound Bar", category: "Tech", price: 22000, type: "Preorder", qty: 0, color: "Black, White", notes: "Sound Control, Magnetic, RGB" },
-    { name: "Aula F108 Pro Keyboard", category: "Keyboard", price: 430000, type: "Preorder", qty: 0, color: "—", notes: "Premium Mechanical Keyboard" },
-    { name: "Gateron Oil King Switch (Preorder)", category: "key switch", price: 130000, type: "Preorder", qty: 0, color: "All Black (Opaque)", notes: "1 bottle - 30pcs", image: "https://raw.githubusercontent.com/thethtoozin16888/myshop-inventory/main/images/oil-king.jpg" },
-    { name: "Sillyworks Hyacinth V2 Switch (Preorder)", category: "key switch", price: 170300, type: "Preorder", qty: 0, color: "Purple", notes: "1 bottle - 100pcs", image: "https://raw.githubusercontent.com/thethtoozin16888/myshop-inventory/main/images/hyacinth-v2.jpg" },
-    { name: "Leobog Graywood V4 switch (Preorder)", category: "key switch", price: 70000, type: "Preorder", qty: 0, color: "Grey/White", notes: "1 bottle - 110pcs", image: "https://raw.githubusercontent.com/thethtoozin16888/myshop-inventory/main/images/graywood-v4-new.jpg" },
-    { name: "Vertex V1.2 Switch (Preorder)", category: "key switch", price: 203000, type: "Preorder", qty: 0, color: "Purple stem / Black housing", notes: "1 bottle - 100pcs", image: "https://raw.githubusercontent.com/thethtoozin16888/myshop-inventory/main/images/vertex-v1-2.jpg" },
-    { name: "WS Morandi Switch (Preorder)", category: "key switch", price: 202500, type: "Preorder", qty: 0, color: "White / Light Guide", notes: "1 bottle - 100pcs", image: "https://raw.githubusercontent.com/thethtoozin16888/myshop-inventory/main/images/ws-morandi.jpg" }
-  ];
-
-  let added = false;
-  itemsToAdd.forEach(newItem => {
-    const existingIndex = inventory.findIndex(i => i.name === newItem.name);
-    if (existingIndex === -1) {
-      newItem.id = getNextId(inventory);
-      inventory.push(newItem);
-      saveLocal(inventory);
-      if (isSheetsConfigured && isOnline) {
-        addToSheet(newItem);
-      }
-      added = true;
-    } else if (inventory[existingIndex].image !== newItem.image) {
-      // Update image if it changed in the code
-      inventory[existingIndex].image = newItem.image;
-      saveLocal(inventory);
-      if (isSheetsConfigured && isOnline) {
-        updateOnSheet(inventory[existingIndex]);
-      }
-      added = true;
-    }
-  });
-
-  if (added) {
-    refresh();
-    toast('ပစ္စည်းအသစ်များကို Google Sheets ထဲသို့ ထည့်သွင်းပေးလိုက်ပါပြီ ✨', 'success');
-  }
+  return; 
 }
 
 // ─── Refresh All ───
