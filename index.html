@@ -599,8 +599,18 @@ function init() {
   const adminParam = urlParams.get('admin');
   
   if (adminParam === 'true') {
-    isAdmin = true;
-    localStorage.setItem('ngrsine_is_admin', 'true');
+    const pwd = prompt("Admin Password ကို ရိုက်ထည့်ပါ:");
+    if (pwd === "1+1=222") {
+      isAdmin = true;
+      localStorage.setItem('ngrsine_is_admin', 'true');
+      toast('Admin Login အောင်မြင်ပါသည် ✨', 'success');
+    } else {
+      isAdmin = false;
+      localStorage.setItem('ngrsine_is_admin', 'false');
+      alert('Password မှားနေပါသည်။');
+      window.location.href = '?admin=false';
+      return;
+    }
   } else if (adminParam === 'false') {
     isAdmin = false;
     localStorage.setItem('ngrsine_is_admin', 'false');
