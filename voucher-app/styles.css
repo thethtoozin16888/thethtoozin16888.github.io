@@ -1,0 +1,89 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 { text-align: center; color: #333; }
+
+.form-group { margin-bottom: 15px; }
+input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+
+.item-row { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; width: 100%; }
+.item-no { width: 38px; flex-shrink: 0; text-align: center; padding: 8px 2px; }
+.item-name { flex-grow: 2; min-width: 80px; }
+.item-color { flex-grow: 1; min-width: 60px; }
+.item-qty { width: 45px; flex-shrink: 0; text-align: center; }
+.item-price { width: 70px; flex-shrink: 0; }
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+}
+
+#addItemBtn { background-color: #28a745; margin-top: 10px; }
+#generateBtn { width: 100%; margin-top: 20px; background-color: #333; }
+.remove-btn { background-color: #dc3545; }
+
+.hidden { display: none; }
+
+.voucher-preview {
+    margin-top: 30px;
+    border-top: 2px dashed #ccc;
+    padding-top: 20px;
+}
+
+.voucher-box {
+    background: white;
+    padding: 20px;
+    border: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.voucher-header { text-align: center; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+
+table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+th:nth-child(4), td.qty-col { text-align: center; }
+.voucher-total { text-align: right; }
+
+@media print {
+    @page { 
+        size: A4;
+        margin: 20mm; 
+    }
+    body { background: white; padding: 0; }
+    .container { box-shadow: none; border: none; width: 100%; max-width: none; }
+    .container > h1, .container > p { display: none !important; }
+    button, .input-section { display: none !important; }
+    
+    #voucherOutput { display: block !important; border: none; padding: 0; margin: 0; }
+    .voucher-box { 
+        width: 100%; 
+        border: none; 
+        padding: 0;
+        margin: 0;
+    }
+    
+    body * { visibility: hidden; }
+    #printableVoucher, #printableVoucher * { visibility: visible; }
+    #printableVoucher { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+    }
+}
