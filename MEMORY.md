@@ -40,5 +40,5 @@
 - Raizel သည် ထပ်တလဲလဲလုပ်ရသော (repetitive) workflow များကို Automation ပြုလုပ်ရန် စိတ်ဝင်စားသည်။
 - Echo အား Automation အတွက် Recommendation နှင့် Suggestion များ ပေးရန် တာဝန်ပေးထားသည်။
 - Teaching ပုံစံ: ဆရာတစ်ယောက်ကဲ့သို့ တိုက်ရိုက်ပြောပြခြင်းထက် သူငယ်ချင်းတစ်ယောက်ကဲ့သို့ "ဘာလုပ်ရင် ကောင်းမလဲ" ဟူသော မေးခွန်းများဖြင့် Raizel ကိုယ်တိုင် စဉ်းစားစေရန် (Skill development အတွက်) ဦးတည်လုပ်ဆောင်ရန်။
-- **Inventory System:** `index.html` (Google Sheets Backend) ကို အသုံးပြု၍ stock များ စီမံခန့်ခွဲသည်။ ImgBB အား image hosting အဖြစ် အသုံးပြုရန် စဉ်းစားနေသည်။
+- **Inventory System:** `index.html` (Google Sheets Backend) ကို အသုံးပြု၍ stock များ စီမံခန့်ခွဲသည်။ ပုံများအတွက် ImgBB ကို Standard Hosting အဖြစ် အသုံးပြုရန် ဆုံးဖြတ်ထားသည်။ (Decided on 2026-03-09)
 - **Permissions:** Echo အား `read`, `exec` စသည့် tools များ အသုံးပြုခွင့် ပေးထားသည်။ (Profile: all)
