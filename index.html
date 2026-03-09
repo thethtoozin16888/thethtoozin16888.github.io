@@ -1373,6 +1373,7 @@ function toast(msg, type = 'info') {
 }
 
 function checkAndAddDiscussedItems() {
+  return; // Disabled auto-adding to prevent category conflicts with Sheet data
   const itemsToAdd = [
     { name: "Ajuste UV Spray - Non-Fragrance (White)", category: "Sun Spray", price: 55000, type: "Preorder", qty: 0, color: "350ml / White", notes: "Japan Brand - Large Size" },
     { name: "Jeep Spirit Sun-Protection Hoodie", category: "Summer 🌤️", price: 33000, type: "Preorder", qty: 0, color: "Sky Blue, Pink, Light Purple, White, Grey", notes: "UPF 50+, Ice Silk Material" },
