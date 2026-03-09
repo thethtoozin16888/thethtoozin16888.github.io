@@ -435,9 +435,19 @@ function init() {
   inventory = loadLocal();
   offlineQueue = loadQueue();
   
-  // Check for admin mode via URL parameter (?admin=true)
+  // Check for admin mode via URL parameter or localStorage
   const urlParams = new URLSearchParams(window.location.search);
-  isAdmin = urlParams.get('admin') === 'true';
+  const adminParam = urlParams.get('admin');
+  
+  if (adminParam === 'true') {
+    isAdmin = true;
+    localStorage.setItem('ngrsine_is_admin', 'true');
+  } else if (adminParam === 'false') {
+    isAdmin = false;
+    localStorage.setItem('ngrsine_is_admin', 'false');
+  } else {
+    isAdmin = localStorage.getItem('ngrsine_is_admin') === 'true';
+  }
   
   // Update UI for admin/customer
   updateRoleUI();
@@ -498,7 +508,7 @@ function updateRoleUI() {
   // Add a small indicator
   const logoSub = document.getElementById('logoSubtitle');
   if (isAdmin) {
-    logoSub.innerHTML = 'Admin Mode — <a href="?" style="color:var(--accent2)">Switch to Customer View</a>';
+    logoSub.innerHTML = 'Admin Mode — <a href="?admin=false" style="color:var(--accent2)">Switch to Customer View</a>';
   } else {
     logoSub.textContent = 'NgrSine';
   }
