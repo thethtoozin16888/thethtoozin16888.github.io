@@ -31,7 +31,18 @@ function updateCartQty(id, delta) {
   const item = cart.find(c => c.id === id);
   if (!item) return;
   
-  item.cartQty += delta;
+  setCartItemQty(id, item.cartQty + delta);
+}
+
+function setCartItemQty(id, newQty) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+
+  newQty = parseInt(newQty, 10);
+  if (isNaN(newQty) || newQty < 0) newQty = 0; // Prevent negative or non-numeric input
+
+  item.cartQty = newQty;
+
   if (item.cartQty <= 0) {
     cart = cart.filter(c => c.id !== id);
   }
@@ -74,7 +85,7 @@ function renderCart() {
         </div>
         <div class="cart-item-qty">
           <button class="qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button>
-          <span>${item.cartQty}</span>
+          <input type="number" class="cart-qty-input" value="${item.cartQty}" min="1" oninput="setCartItemQty(${item.id}, this.value)">
           <button class="qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
         </div>
         <div style="font-weight:700; min-width:80px; text-align:right">${subtotal.toLocaleString()}</div>

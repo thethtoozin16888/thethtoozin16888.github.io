@@ -54,6 +54,24 @@
     cursor: pointer;
 }
 
+.cart-qty-input {
+    width: 45px;
+    padding: 4px;
+    border: 1px solid var(--surface3);
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text);
+    text-align: center;
+    font-size: 0.85rem;
+    outline: none;
+}
+/* Hide spin buttons */
+.cart-qty-input::-webkit-inner-spin-button, 
+.cart-qty-input::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
 .pos-summary {
     margin-top: 20px;
     padding: 16px;
