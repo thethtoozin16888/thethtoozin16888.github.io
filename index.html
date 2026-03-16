@@ -519,7 +519,18 @@
         const total = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
         document.getElementById('vTotal').textContent = total.toLocaleString() + ' Ks';
 
-        // Deduct Stock
+        // Deduct Stock & Record Sale
+        const saleRecord = {
+            billNo: billNo,
+            customer: customer,
+            date: date,
+            items: cart.map(i => `${i.name} (${i.cartQty})`).join(', '),
+            total: total
+        };
+
+        // Send sale record to server (new action: recordSale)
+        await saveToServer('recordSale', saleRecord);
+
         for (let cItem of cart) {
             if (!cItem.isCustom) {
                 const invItem = inventory.find(i => i.id === cItem.id);
