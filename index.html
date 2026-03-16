@@ -336,10 +336,13 @@
     function renderInventory() {
         const q = document.getElementById('invSearch').value.toLowerCase();
         const body = document.getElementById('inventoryBody');
-        const filtered = inventory.filter(i => i.name.toLowerCase().includes(q));
+        const filtered = inventory.filter(i => 
+            i.name.toLowerCase().includes(q) || 
+            (i.category && i.category.toLowerCase().includes(q))
+        );
         
         body.innerHTML = filtered.map(i => `
-            <tr>
+            <tr onclick="${isAdmin ? `openItemModal(${i.id})` : ''}" style="${isAdmin ? 'cursor:pointer' : ''}">
                 <td><img src="${i.image.split(',')[0] || ''}" style="width:40px;height:40px;object-fit:cover;border-radius:4px" onerror="this.src='https://via.placeholder.com/40?text=📦'"></td>
                 <td style="font-weight:600">${i.name}</td>
                 <td><span style="font-size:0.8rem;color:var(--text2)">${i.category || '-'}</span></td>
@@ -347,13 +350,13 @@
                 <td>${i.qty}</td>
                 <td><span class="badge badge-${i.type.toLowerCase().replace(' ','')}">${i.type}</span></td>
                 ${isAdmin ? `<td>
-                    <button class="btn btn-sm btn-secondary" onclick="openItemModal(${i.id})">Edit</button>
+                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openItemModal(${i.id})">Edit</button>
                 </td>` : ''}
             </tr>
         `).join('');
 
         if (isAdmin) {
-            const totalVal = filtered.reduce((s,i) => s + (i.price * i.qty), 0);
+            const totalVal = filtered.reduce((s,i) => s + (Number(i.price) * Number(i.qty)), 0);
             document.getElementById('dashboard').innerHTML = `
                 <div class="stat-card"><div class="stat-label">Total Items</div><div class="stat-value">${inventory.length}</div></div>
                 <div class="stat-card" style="border-color:var(--green)"><div class="stat-label">Inventory Value</div><div class="stat-value">${totalVal.toLocaleString()} Ks</div></div>
@@ -365,13 +368,14 @@
         const item = inventory.find(i => i.id === id) || { id: '', name: '', category: '', color: '', price: 0, qty: 0, type: 'Instock', image: '', notes: '' };
         document.getElementById('fId').value = item.id;
         document.getElementById('fName').value = item.name;
-        document.getElementById('fCat').value = item.category;
-        document.getElementById('fColor').value = item.color;
-        document.getElementById('fPrice').value = item.price;
-        document.getElementById('fQty').value = item.qty;
-        document.getElementById('fType').value = item.type;
-        document.getElementById('fImage').value = item.image;
-        document.getElementById('fNotes').value = item.notes;
+        document.getElementById('fCat').value = item.category || '';
+        document.getElementById('fColor').value = item.color || '';
+        document.getElementById('fPrice').value = item.price || 0;
+        document.getElementById('fQty').value = item.qty || 0;
+        document.getElementById('fType').value = item.type || 'Instock';
+        document.getElementById('fImage').value = item.image || '';
+        document.getElementById('fNotes').value = item.notes || '';
+        document.getElementById('modalTitle').textContent = id ? 'Edit Item' : 'Add New Item';
         openModal('itemModal');
     }
 
@@ -382,16 +386,21 @@
             name: document.getElementById('fName').value,
             category: document.getElementById('fCat').value,
             color: document.getElementById('fColor').value,
-            price: parseInt(document.getElementById('fPrice').value),
-            qty: parseInt(document.getElementById('fQty').value),
+            price: parseInt(document.getElementById('fPrice').value) || 0,
+            qty: parseInt(document.getElementById('fQty').value) || 0,
             type: document.getElementById('fType').value,
             image: document.getElementById('fImage').value,
             notes: document.getElementById('fNotes').value
         };
         
-        const success = await saveToServer(id ? 'update' : 'add', item);
-        if (success) {
-            await fetchInventory();
+        const res = await saveToServer(id ? 'update' : 'add', item);
+        if (res.success) {
+            if (id) {
+                const idx = inventory.findIndex(i => i.id === item.id);
+                inventory[idx] = item;
+            } else {
+                inventory.push(item);
+            }
             renderInventory();
             closeModal('itemModal');
             showToast("Saved successfully!");
@@ -403,13 +412,23 @@
         const q = document.getElementById('posSearch').value.toLowerCase();
         const res = document.getElementById('posSearchResults');
         if (!q) { res.style.display = 'none'; return; }
-        const matches = inventory.filter(i => i.name.toLowerCase().includes(q) && i.type === 'Instock');
-        res.innerHTML = matches.map(i => `<div class="search-item" onclick="addToCart(${i.id})"><span>${i.name}</span><strong>${i.price.toLocaleString()} Ks</strong></div>`).join('');
+        // Search in all items, but indicate status
+        const matches = inventory.filter(i => 
+            i.name.toLowerCase().includes(q) || 
+            (i.category && i.category.toLowerCase().includes(q))
+        );
+        res.innerHTML = matches.map(i => `
+            <div class="search-item" onclick="addToCart(${i.id})">
+                <span>${i.name} ${i.type === 'Sold Out' ? '<small style="color:var(--red)">(Out)</small>' : ''}</span>
+                <strong>${Number(i.price).toLocaleString()} Ks</strong>
+            </div>
+        `).join('');
         res.style.display = matches.length ? 'block' : 'none';
     }
 
     function addToCart(id) {
         const item = inventory.find(i => i.id === id);
+        if (!item) return;
         const existing = cart.find(c => c.id === id && !c.isCustom);
         if (existing) existing.cartQty++;
         else cart.push({ ...item, cartQty: 1, isCustom: false });
@@ -421,36 +440,62 @@
     function addCustomPosItem() {
         const name = prompt("Item Name:"); if (!name) return;
         const price = parseInt(prompt("Price:")) || 0;
-        cart.push({ id: Date.now(), name, price, cartQty: 1, isCustom: true, color: '' });
+        const color = prompt("Color/Size (Optional):") || '';
+        cart.push({ id: 'custom-' + Date.now(), name, price, cartQty: 1, isCustom: true, color: color });
         renderCart();
     }
 
     function updateCartQty(id, delta) {
         const item = cart.find(c => c.id === id);
-        item.cartQty += delta;
+        if (!item) return;
+        item.cartQty = Math.max(0, item.cartQty + delta);
         if (item.cartQty <= 0) cart = cart.filter(c => c.id !== id);
         renderCart();
+    }
+
+    function updateCartPrice(id, newPrice) {
+        const item = cart.find(c => c.id === id);
+        if (item) {
+            item.price = parseInt(newPrice) || 0;
+            renderCartSummaryOnly();
+        }
+    }
+
+    function handleCartQtyInput(id, val) {
+        const item = cart.find(c => c.id === id);
+        if (item) {
+            item.cartQty = parseInt(val) || 0;
+            renderCartSummaryOnly();
+        }
+    }
+
+    function renderCartSummaryOnly() {
+        const total = cart.reduce((s,i) => s + (Number(i.price) * Number(i.cartQty)), 0);
+        document.getElementById('posTotal').textContent = total.toLocaleString() + ' Ks';
     }
 
     function renderCart() {
         const body = document.getElementById('cartBody');
         body.innerHTML = cart.map(i => `
             <tr>
-                <td><strong>${i.name}</strong></td>
-                <td>${i.price.toLocaleString()}</td>
+                <td><strong>${i.name}</strong><br><small>${i.color || ''}</small></td>
                 <td>
-                    <div style="display:flex;align-items:center;gap:8px">
-                        <button class="qty-btn" onclick="updateCartQty(${i.id}, -1)">-</button>
-                        <span>${i.cartQty}</span>
-                        <button class="qty-btn" onclick="updateCartQty(${i.id}, 1)">+</button>
+                    <input type="number" value="${i.price}" style="width:80px; padding:4px; font-size:0.8rem" 
+                        oninput="updateCartPrice('${i.id}', this.value)">
+                </td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:5px">
+                        <button class="qty-btn" onclick="updateCartQty('${i.id}', -1)">-</button>
+                        <input type="number" value="${i.cartQty}" style="width:45px; text-align:center; padding:4px; font-size:0.8rem"
+                            oninput="handleCartQtyInput('${i.id}', this.value)">
+                        <button class="qty-btn" onclick="updateCartQty('${i.id}', 1)">+</button>
                     </div>
                 </td>
-                <td style="font-weight:700">${(i.price * i.cartQty).toLocaleString()}</td>
-                <td><button class="btn btn-sm btn-danger" onclick="updateCartQty(${i.id}, -${i.cartQty})">&times;</button></td>
+                <td style="font-weight:700">${(Number(i.price) * Number(i.cartQty)).toLocaleString()}</td>
+                <td><button class="btn btn-sm btn-danger" onclick="updateCartQty('${i.id}', -${i.cartQty})">&times;</button></td>
             </tr>
         `).join('');
-        const total = cart.reduce((s,i) => s + (i.price * i.cartQty), 0);
-        document.getElementById('posTotal').textContent = total.toLocaleString() + ' Ks';
+        renderCartSummaryOnly();
     }
 
     async function checkout() {
