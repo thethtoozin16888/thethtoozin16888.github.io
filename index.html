@@ -107,7 +107,7 @@
                 <div class="sync-dot"></div>
                 <span id="syncLabel">Loading...</span>
             </div>
-            <button class="btn btn-secondary btn-sm admin-only" id="adminToggle" onclick="toggleAdmin()">Admin Mode</button>
+            <button class="btn btn-secondary btn-sm" id="adminToggle" onclick="toggleAdmin()">Login</button>
             <button class="btn btn-primary btn-sm" id="navBtn" onclick="toggleView()">POS System</button>
         </div>
     </div>
@@ -262,18 +262,26 @@
     function updateRoleUI() {
         document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
         document.getElementById('roleText').textContent = isAdmin ? 'NgrSine (Admin)' : 'NgrSine';
-        document.getElementById('adminToggle').textContent = isAdmin ? 'Exit Admin' : 'Admin Login';
+        document.getElementById('adminToggle').textContent = isAdmin ? 'Logout' : 'Login';
+        document.getElementById('navBtn').style.display = isAdmin ? '' : 'none';
     }
 
     function toggleAdmin() {
         if (!isAdmin) {
-            if (prompt("Password:") === "1+1=222") {
+            const pwd = prompt("Admin Password:");
+            if (pwd === "1+1=222") {
                 isAdmin = true;
                 localStorage.setItem('ngrsine_admin', 'true');
-            } else alert("Wrong!");
+                showToast("Logged in as Admin ✨");
+            } else if (pwd !== null) {
+                alert("Incorrect password!");
+            }
         } else {
-            isAdmin = false;
-            localStorage.setItem('ngrsine_admin', 'false');
+            if (confirm("Logout from Admin Mode?")) {
+                isAdmin = false;
+                localStorage.setItem('ngrsine_admin', 'false');
+                if (currentView === 'pos') toggleView(); // Go back to inventory
+            }
         }
         updateRoleUI();
         renderInventory();
