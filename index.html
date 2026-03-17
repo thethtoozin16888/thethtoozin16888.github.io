@@ -115,7 +115,7 @@
 
 <div class="main">
     <!-- Inventory View -->
-    <div id="view-inventory">
+    <div id=\"view-inventory\">
         <div class="dashboard admin-only" id="dashboard"></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:20px; gap:10px; flex-wrap:wrap;">
             <input type="text" id="invSearch" placeholder="Search products..." style="flex:1; min-width:200px;" oninput="renderInventory()">
@@ -305,7 +305,6 @@
             const r = await fetch(SHEET_URL + '?action=list');
             const data = await r.json();
             if (data.success) {
-                // Deduplicate by ID and handle logic
                 inventory = data.items;
                 setSync('synced');
             }
@@ -412,7 +411,6 @@
         const q = document.getElementById('posSearch').value.toLowerCase();
         const res = document.getElementById('posSearchResults');
         if (!q) { res.style.display = 'none'; return; }
-        // Search in all items, but indicate status
         const matches = inventory.filter(i => 
             i.name.toLowerCase().includes(q) || 
             (i.category && i.category.toLowerCase().includes(q))
