@@ -43,7 +43,21 @@
         .stat-label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; margin-bottom: 5px; }
         .stat-value { font-size: 1.5rem; font-weight: 700; color: #fff; }
 
-        /* Tables */
+        /* Grid View */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .product-card { background: var(--surface); border: 1px solid var(--surface3); border-radius: var(--radius); overflow: hidden; transition: 0.3s; position: relative; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; background: #000; }
+        .card-body { padding: 15px; flex: 1; display: flex; flex-direction: column; }
+        .card-title { font-weight: 700; font-size: 1rem; margin-bottom: 8px; color: #fff; }
+        .card-cat { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; margin-bottom: 10px; }
+        .card-price { font-size: 1.1rem; font-weight: 800; color: var(--green); margin-bottom: 15px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--surface3); }
+        .card-actions { display: flex; gap: 8px; }
+        
+        .badge-floating { position: absolute; top: 10px; right: 10px; z-index: 5; }
+
+        /* Tables (Fallback/Internal) */
         .table-wrap { background: var(--surface); border: 1px solid var(--surface3); border-radius: var(--radius); overflow: hidden; }
         .table-scroll { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -123,7 +137,7 @@
                 <button class="btn btn-primary" onclick="openItemModal()">+ Add Item</button>
             </div>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" style="display:none"> <!-- Keep structure but hide -->
             <div class="table-scroll">
                 <table>
                     <thead>
@@ -141,6 +155,8 @@
                 </table>
             </div>
         </div>
+        <!-- Grid View Container -->
+        <div id="inventoryGrid" class="product-grid"></div>
     </div>
 
     <!-- POS View -->
@@ -334,25 +350,45 @@
     // 4. Inventory Logic
     function renderInventory() {
         const q = document.getElementById('invSearch').value.toLowerCase();
-        const body = document.getElementById('inventoryBody');
+        const grid = document.getElementById('inventoryGrid');
         const filtered = inventory.filter(i => 
             i.name.toLowerCase().includes(q) || 
             (i.category && i.category.toLowerCase().includes(q))
         );
         
-        body.innerHTML = filtered.map(i => `
-            <tr onclick="${isAdmin ? `openItemModal(${i.id})` : ''}" style="${isAdmin ? 'cursor:pointer' : ''}">
-                <td><img src="${i.image.split(',')[0] || ''}" style="width:40px;height:40px;object-fit:cover;border-radius:4px" onerror="this.src='https://via.placeholder.com/40?text=📦'"></td>
-                <td style="font-weight:600">${i.name}</td>
-                <td><span style="font-size:0.8rem;color:var(--text2)">${i.category || '-'}</span></td>
-                <td style="color:var(--green);font-weight:700">${Number(i.price).toLocaleString()} Ks</td>
-                <td>${i.qty}</td>
-                <td><span class="badge badge-${i.type.toLowerCase().replace(' ','')}">${i.type}</span></td>
-                ${isAdmin ? `<td>
-                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openItemModal(${i.id})">Edit</button>
-                </td>` : ''}
-            </tr>
-        `).join('');
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text2);">No items found matching "${q}"</div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(i => {
+            const imgSrc = i.image.split(',')[0] || 'https://via.placeholder.com/300x200?text=No+Image';
+            const badgeClass = i.type.toLowerCase().replace(' ','');
+            
+            return `
+                <div class="product-card">
+                    <span class="badge badge-floating badge-${badgeClass}">${i.type}</span>
+                    <img src="${imgSrc}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=📦'" onclick="${isAdmin ? `openItemModal(${i.id})` : ''}">
+                    <div class="card-body">
+                        <div class="card-cat">${i.category || 'General'}</div>
+                        <div class="card-title">${i.name}</div>
+                        <div class="card-price">${Number(i.price).toLocaleString()} Ks</div>
+                        
+                        <div class="card-footer">
+                            <div style="font-size: 0.85rem; color: var(--text2);">Stock: <strong>${i.qty}</strong></div>
+                            <div class="card-actions">
+                                ${isAdmin ? `
+                                    <button class="btn btn-sm btn-secondary" onclick="openItemModal(${i.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteItem(${i.id})">Delete</button>
+                                ` : `
+                                    <button class="btn btn-sm btn-primary" onclick="addToCart(${i.id}); toggleView();">Buy Now</button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
 
         if (isAdmin) {
             const totalVal = filtered.reduce((s,i) => s + (Number(i.price) * Number(i.qty)), 0);
@@ -360,6 +396,28 @@
                 <div class="stat-card"><div class="stat-label">Total Items</div><div class="stat-value">${inventory.length}</div></div>
                 <div class="stat-card" style="border-color:var(--green)"><div class="stat-label">Inventory Value</div><div class="stat-value">${totalVal.toLocaleString()} Ks</div></div>
             `;
+        }
+    }
+
+    async function deleteItem(id) {
+        if (!confirm("Are you sure you want to delete this item?")) return;
+        setSync('syncing');
+        try {
+            const r = await fetch(SHEET_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'text/plain'},
+                body: JSON.stringify({ action: 'delete', id: id })
+            });
+            const res = await r.json();
+            if (res.success) {
+                inventory = inventory.filter(i => i.id !== id);
+                renderInventory();
+                showToast("Item deleted successfully");
+                setSync('synced');
+            }
+        } catch(e) { 
+            setSync('error'); 
+            showToast("Delete failed", "error");
         }
     }
 
