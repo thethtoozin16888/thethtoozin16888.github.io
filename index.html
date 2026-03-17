@@ -366,9 +366,9 @@
             const badgeClass = i.type.toLowerCase().replace(' ','');
             
             return `
-                <div class="product-card">
+                <div class="product-card" onclick="window.location.href='detail.html?id=${i.id}'" style="cursor:pointer">
                     <span class="badge badge-floating badge-${badgeClass}">${i.type}</span>
-                    <img src="${imgSrc}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=📦'" onclick="${isAdmin ? `openItemModal(${i.id})` : ''}">
+                    <img src="${imgSrc}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=📦'">
                     <div class="card-body">
                         <div class="card-cat">${i.category || 'General'}</div>
                         <div class="card-title">${i.name}</div>
@@ -378,10 +378,10 @@
                             <div style="font-size: 0.85rem; color: var(--text2);">Stock: <strong>${i.qty}</strong></div>
                             <div class="card-actions">
                                 ${isAdmin ? `
-                                    <button class="btn btn-sm btn-secondary" onclick="openItemModal(${i.id})">Edit</button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteItem(${i.id})">Delete</button>
+                                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openItemModal(${i.id})">Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteItem(${i.id})">Delete</button>
                                 ` : `
-                                    <button class="btn btn-sm btn-primary" onclick="addToCart(${i.id}); toggleView();">Buy Now</button>
+                                    <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); addToCart(${i.id}); toggleView();">Buy Now</button>
                                 `}
                             </div>
                         </div>
