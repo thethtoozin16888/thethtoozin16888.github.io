@@ -132,7 +132,10 @@
     <div id=\"view-inventory\">
         <div class="dashboard admin-only" id="dashboard"></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:20px; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="invSearch" placeholder="Search products..." style="flex:1; min-width:200px;" oninput="renderInventory()">
+            <input type="text" id="invSearch" placeholder="Search products..." style="flex:2; min-width:200px;" oninput="renderInventory()">
+            <select id="invCatFilter" style="flex:1; min-width:150px;" onchange="renderInventory()">
+                <option value="">All Categories</option>
+            </select>
             <div class="admin-only">
                 <button class="btn btn-primary" onclick="openItemModal()">+ Add Item</button>
             </div>
@@ -350,11 +353,21 @@
     // 4. Inventory Logic
     function renderInventory() {
         const q = document.getElementById('invSearch').value.toLowerCase();
+        const catFilter = document.getElementById('invCatFilter').value;
         const grid = document.getElementById('inventoryGrid');
-        const filtered = inventory.filter(i => 
-            i.name.toLowerCase().includes(q) || 
-            (i.category && i.category.toLowerCase().includes(q))
-        );
+
+        // Update category filter dropdown
+        const categories = [...new Set(inventory.map(i => i.category).filter(Boolean))].sort();
+        const filterSelect = document.getElementById('invCatFilter');
+        const currentVal = filterSelect.value;
+        filterSelect.innerHTML = '<option value="">All Categories</option>' + 
+            categories.map(c => `<option value="${c}" ${c === currentVal ? 'selected' : ''}>${c}</option>`).join('');
+
+        const filtered = inventory.filter(i => {
+            const matchesQuery = i.name.toLowerCase().includes(q) || (i.category && i.category.toLowerCase().includes(q));
+            const matchesCat = !catFilter || i.category === catFilter;
+            return matchesQuery && matchesCat;
+        });
         
         if (filtered.length === 0) {
             grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text2);">No items found matching "${q}"</div>`;
