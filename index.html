@@ -391,6 +391,7 @@
                             <div style="font-size: 0.85rem; color: var(--text2);">Stock: <strong>${i.qty}</strong></div>
                             <div class="card-actions">
                                 ${isAdmin ? `
+                                    <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); addToCart(${i.id}); toggleView();">Buy Now</button>
                                     <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openItemModal(${i.id})">Edit</button>
                                     <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteItem(${i.id})">Delete</button>
                                 ` : `
