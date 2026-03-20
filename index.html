@@ -359,7 +359,31 @@
             const r = await fetch(SHEET_URL + '?action=list');
             const res = await r.json();
             if (res.success) {
-                inventory = res.items;
+                // Deduplicate items that have " (Preorder)" in name if a base item exists
+                const items = res.items || [];
+                const cleanItems = [];
+                const seenNames = new Set();
+                
+                // First pass: add items without " (Preorder)"
+                items.forEach(item => {
+                    if (!item.name.includes(' (Preorder)')) {
+                        cleanItems.push(item);
+                        seenNames.add(item.name.toLowerCase());
+                    }
+                });
+                
+                // Second pass: add " (Preorder)" items only if base name not seen
+                items.forEach(item => {
+                    if (item.name.includes(' (Preorder)')) {
+                        const baseName = item.name.replace(' (Preorder)', '').toLowerCase();
+                        if (!seenNames.has(baseName)) {
+                            cleanItems.push(item);
+                            seenNames.add(item.name.toLowerCase());
+                        }
+                    }
+                });
+
+                inventory = cleanItems;
                 setSyncStatus('synced');
             }
         } catch(e) { setSyncStatus('error'); }
