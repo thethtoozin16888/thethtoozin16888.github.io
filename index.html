@@ -402,18 +402,30 @@
     }
 
     function renderCategories() {
-        const cats = [...new Set(inventory.map(i => i.category).filter(Boolean))].sort();
+        const cats = [...new Set(inventory.map(i => i.category ? i.category.trim() : 'General'))].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        
+        // Final deduplication for display (case-insensitive)
+        const uniqueDisplayCats = [];
+        const seen = new Set();
+        cats.forEach(c => {
+            if (!seen.has(c.toLowerCase())) {
+                uniqueDisplayCats.push(c);
+                seen.add(c.toLowerCase());
+            }
+        });
+
         const container = document.getElementById('categoryTabs');
         container.innerHTML = `<div class="cat-tab ${activeCat===''?'active':''}" onclick="setCategory('')">All Items</div>` + 
-            cats.map(c => `<div class="cat-tab ${activeCat===c?'active':''}" onclick="setCategory('${c}')">${c}</div>`).join('');
+            uniqueDisplayCats.map(c => `<div class="cat-tab ${activeCat.toLowerCase() === c.toLowerCase() ? 'active' : ''}" onclick="setCategory('${c}')">${c}</div>`).join('');
     }
 
     function renderInventory() {
         const q = document.getElementById('globalSearch').value.toLowerCase();
         const grid = document.getElementById('productGrid');
         const filtered = inventory.filter(i => {
-            const matchesQuery = i.name.toLowerCase().includes(q) || (i.category && i.category.toLowerCase().includes(q));
-            const matchesCat = !activeCat || i.category === activeCat;
+            const itemCat = (i.category || 'General').toLowerCase().trim();
+            const matchesQuery = i.name.toLowerCase().includes(q) || itemCat.includes(q);
+            const matchesCat = !activeCat || itemCat === activeCat.toLowerCase().trim();
             return matchesQuery && matchesCat;
         });
 
@@ -632,7 +644,7 @@
         applyTheme();
     }
 
-    function setCategory(c) { activeCat = c; renderInventory(); renderCategories(); }
+    function setCategory(c) { activeCat = c.toLowerCase().trim(); renderInventory(); renderCategories(); }
     function filterItems() { renderInventory(); }
     function toast(m) {
         const t = document.createElement('div'); t.className = 'toast'; t.textContent = m;
