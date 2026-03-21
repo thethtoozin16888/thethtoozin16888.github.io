@@ -359,27 +359,23 @@
             const r = await fetch(SHEET_URL + '?action=list');
             const res = await r.json();
             if (res.success) {
-                // Deduplicate items that have " (Preorder)" in name if a base item exists
+                // Better Deduplication Logic
                 const items = res.items || [];
                 const cleanItems = [];
-                const seenNames = new Set();
+                const seenKeys = new Set();
                 
-                // First pass: add items without " (Preorder)"
+                // Sort to prefer shorter names (base names) over names with suffixes
+                items.sort((a, b) => a.name.length - b.name.length);
+
                 items.forEach(item => {
-                    if (!item.name.includes(' (Preorder)')) {
+                    const baseName = item.name.replace(' (Preorder)', '').toLowerCase().trim();
+                    const key = `${baseName}-${item.category.toLowerCase()}`;
+                    
+                    // If we haven't seen this item name/category combo OR this specific ID
+                    if (!seenKeys.has(key) && !seenKeys.has(item.id)) {
                         cleanItems.push(item);
-                        seenNames.add(item.name.toLowerCase());
-                    }
-                });
-                
-                // Second pass: add " (Preorder)" items only if base name not seen
-                items.forEach(item => {
-                    if (item.name.includes(' (Preorder)')) {
-                        const baseName = item.name.replace(' (Preorder)', '').toLowerCase();
-                        if (!seenNames.has(baseName)) {
-                            cleanItems.push(item);
-                            seenNames.add(item.name.toLowerCase());
-                        }
+                        seenKeys.add(key);
+                        seenKeys.add(item.id);
                     }
                 });
 
